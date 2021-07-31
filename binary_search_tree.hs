@@ -27,10 +27,10 @@ delete (Node left value right) x
 deleteNode :: BST -> BST
 deleteNode (Node Null value right) = right
 deleteNode (Node left value Null) = left
-deleteNode (Node left value right) = insert left (getValue right)
+deleteNode (Node left value right) = insertNode left right
 
-getValue :: BST -> Int
-getValue (Node _ value _) = value
+insertNode :: BST -> BST -> BST
+insertNode (Node left value _) rightNode = (Node left value rightNode)
 
 is_empty :: BST -> Bool
 is_empty Null = True
