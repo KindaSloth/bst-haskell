@@ -31,3 +31,7 @@ deleteNode (Node left value right) = insert left (getValue right)
 
 getValue :: BST -> Int
 getValue (Node _ value _) = value
+
+is_empty :: BST -> Bool
+is_empty Null = True
+is_empty (Node _ value _) = False
