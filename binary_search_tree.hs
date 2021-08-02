@@ -30,7 +30,8 @@ deleteNode (Node left value Null) = left
 deleteNode (Node left value right) = insertNode left right
 
 insertNode :: BST -> BST -> BST
-insertNode (Node left value _) rightNode = (Node left value rightNode)
+insertNode (Node left value Null) rightNode = (Node left value rightNode)
+insertNode (Node left value right) rightNode = (Node left value (insertNode right rightNode))
 
 is_empty :: BST -> Bool
 is_empty Null = True
