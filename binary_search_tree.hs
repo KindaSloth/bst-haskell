@@ -1,22 +1,32 @@
-data BST = Null | Node BST Int BST 
-    deriving(Show)
+import Data.Semigroup
+import Data.Monoid
+import Data.Foldable
 
-insert :: BST -> Int -> BST
-insert Null x = (Node Null x Null)
+data BST a = Null | Node (BST a) a (BST a)
+    deriving(Show, Ord, Eq)
+
+instance Foldable BST where
+    foldMap f (Node Null x Null) = f x 
+    foldMap f (Node left x Null) = foldMap f left <> f x
+    foldMap f (Node Null x right) = f x <> foldMap f right
+    foldMap f (Node left x right) = foldMap f left <> f x <> foldMap f right
+
+insert :: BST Int -> Int -> BST Int
+insert Null x = Node Null x Null
 insert (Node left value right) x
     | x > value = Node left value (insert right x)
     | x < value = Node (insert left x) value right
     | otherwise = error "number already exist in the tree"
 
-search :: BST -> Int -> BST
+search :: BST Int -> Int -> BST Int
 search Null x = error "Empty tree"
 search (Node left value right) x
     | x > value = search right x
     | x < value = search left x
-    | x == value = (Node left value right)
+    | x == value = Node left value right
     | otherwise = error "this numder don't exist in the tree yet"
 
-delete :: BST -> Int -> BST
+delete :: BST Int -> Int -> BST Int
 delete Null _ = Null
 delete (Node left value right) x
     | x > value = Node left value (delete right x)
@@ -24,15 +34,15 @@ delete (Node left value right) x
     | x == value = deleteNode (Node left value right)
     | otherwise = error "number already exist in the tree"
 
-deleteNode :: BST -> BST
+deleteNode :: BST Int -> BST Int
 deleteNode (Node Null value right) = right
 deleteNode (Node left value Null) = left
 deleteNode (Node left value right) = insertNode left right
 
-insertNode :: BST -> BST -> BST
-insertNode (Node left value Null) rightNode = (Node left value rightNode)
-insertNode (Node left value right) rightNode = (Node left value (insertNode right rightNode))
+insertNode :: BST Int -> BST Int -> BST Int
+insertNode (Node left value Null) rightNode = Node left value rightNode
+insertNode (Node left value right) rightNode = Node left value (insertNode right rightNode)
 
-is_empty :: BST -> Bool
+is_empty :: BST Int -> Bool
 is_empty Null = True
 is_empty (Node _ value _) = False
