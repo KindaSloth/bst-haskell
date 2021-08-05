@@ -1,6 +1,7 @@
 import Data.Semigroup
 import Data.Monoid
 import Data.Foldable
+import Data.Functor
 
 data BST a = Null | Node (BST a) a (BST a)
     deriving(Show, Ord, Eq)
@@ -10,6 +11,12 @@ instance Foldable BST where
     foldMap f (Node left x Null) = foldMap f left <> f x
     foldMap f (Node Null x right) = f x <> foldMap f right
     foldMap f (Node left x right) = foldMap f left <> f x <> foldMap f right
+
+instance Functor BST where
+    fmap f (Node Null x Null) = Node Null (f x) Null
+    fmap f (Node left x Null) = Node (fmap f left) (f x) Null
+    fmap f (Node Null x right) = Node Null (f x) (fmap f right)
+    fmap f (Node left x right) = Node (fmap f left) (f x) (fmap f right)
 
 insert :: BST Int -> Int -> BST Int
 insert Null x = Node Null x Null
