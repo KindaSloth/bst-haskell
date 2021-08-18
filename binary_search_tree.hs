@@ -2,6 +2,7 @@ import Data.Semigroup
 import Data.Monoid
 import Data.Foldable
 import Data.Functor
+import Control.Applicative
 
 data BST a = Null | Node (BST a) a (BST a)
     deriving(Show, Ord, Eq)
